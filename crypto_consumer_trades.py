@@ -14,6 +14,10 @@ replace the coinbase.py file with the new file in directory here as 'coinbase.py
 then need to rebuild the repo and install the .whl file to use the local repo. at the dbx cluster, build from wheel.
 go to databricks > conmpute > libraries > install from wheel and select the created .whl file for cryptofeed 
 
+in order to generate the .whl file, open the cryptofeed repo that was cloned -> go to the build_wheel file.
+Then in the notebook, execute these 2 commands to generate the .whl file. 
+This is what will be used to build the library into the dbx cluster instead of importing the library use pypi. 
+
 !pip install setuptools wheel
 !python setup.py bdist_wheel
 
