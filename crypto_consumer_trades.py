@@ -64,24 +64,19 @@ logger = logging.getLogger(__name__)
 
 # Constants
 CATALOG_NAME = "trader_etl"
-SCHEMA_NAME = "market_etl"
+SCHEMA_NAME = "build"
 TOPIC = "trade"
+TABLE_NAME = "trades"
 DATABASE = f"{CATALOG_NAME}.{SCHEMA_NAME}"
-INGESTION_TABLE = f"{DATABASE}.{TOPIC}"
-TOPIC_CHECKPOINT_PATH = "/tmp/checkpoints/trade_topic"
+INGESTION_TABLE = f"{DATABASE}.{TABLE_NAME}"
+TOPIC_CHECKPOINT_PATH = f"/tmp/checkpoints/{TOPIC}_topic"
 
 # Spark session setup
 spark = SparkSession.builder.appName("KafkaStreamConsumer").getOrCreate()
-"""
-## Potentially useful snippets
-# %fs rm -r dbfs:/tmp/checkpoints/trade_topic
-# %sql
-# drop table if exists trader_etl.market_etl.trade;
-"""
 
 spark.sql(
     f"""
-    CREATE TABLE IF NOT EXISTS {DATABASE}.{TOPIC} (
+    CREATE TABLE IF NOT EXISTS {DATABASE}.{TABLE_NAME} (
         exchange STRING,
         symbol STRING,
         side STRING,
@@ -175,7 +170,13 @@ write_stream.awaitTermination()
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from  trader_etl.market_etl.trade order by ts desc ;
+# MAGIC select * from  trader_etl.build.trades order by ts desc ;
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC
+# MAGIC Useful snippets
 
 # COMMAND ----------
 
@@ -184,4 +185,4 @@ write_stream.awaitTermination()
 # COMMAND ----------
 
 # %sql
-# drop table if exists trader_etl.market_etl.trade;
+# drop table if exists trader_etl.build.trades;
